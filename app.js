@@ -3,11 +3,13 @@ const express = require('express');
 const app = express();
 
 const indexRouter = require('./api/rounts/index');
-const todolistRouter = require('./api/rounts/user');
+const userRouter = require('./api/rounts/user');
+const todolistRouter = require('./api/rounts/todolist');
 
 
 app.use(bodyParser.json());
 app.use('/', indexRouter);
+app.use('/todolist', userRouter);
 app.use('/todolist', todolistRouter);
 
 
