@@ -21,7 +21,7 @@ router.get('/user', (req, res) => {
 
 
 
-
+//register
 router.post('/user', async (req, res) => {
     try {
         let data = req.body;
