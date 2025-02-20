@@ -28,6 +28,20 @@ router.get('/list/:userId', (req, res) => {
     });
 });
 
+// get to-do list by user id
+router.get('/alllist/:userId', (req, res) => {
+    let id = req.params.userId;
+
+    let sql = 'SELECT count(*) FROM todolist WHERE user_id = ?';
+    sql = mysql.format(sql, [id]);
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) throw error;
+
+        res.status(200).json({ message: 'successful', list: results });
+    });
+});
+
 
 
 // router.get('/:cusId', (req, res) => {
@@ -222,23 +236,42 @@ router.delete('/:id', (req, res) => {
 
 
 
+//get not complete
+router.get('/notcompleted/:user_id', (req, res) => {
+    let user_id = req.params.user_id;
 
-// router.get('/notcompleted', (req, res) => {
 
-//     pool.query('SELECT * from todolist where is_completed = 0', (error, results, fields) => {
-//         if (error) throw error;
-//         res.status(200).json(results);
-//     });
+    let sql = 'SELECT * from todolist where is_complete = 0 and user_id = ?';
+    sql = mysql.format(sql, [user_id]);
 
-// });
+    pool.query(sql, (error, results, fields) => {
 
-// router.get('/completed', (req, res) => {
+        // Loop through the results and delete the user_id field from each object
+        results.forEach((item) => {
+            delete item.user_id;
+        });
+        if (error) throw error;
+        res.status(200).json({ message: 'successful', list: results });
+    });
 
-//     pool.query('SELECT * from todolist where is_completed = 1', (error, results, fields) => {
-//         if (error) throw error;
-//         res.status(200).json(results);
-//     });
+});
 
-// });
+// select complete task
+router.get('/completed/:user_id', (req, res) => {
+    let user_id = req.params.user_id;
+
+
+    let sql = 'SELECT * from todolist where is_complete = 1 and user_id = ?';
+    sql = mysql.format(sql, [user_id]);
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) throw error;
+        res.status(200).json({ message: 'successful', list: results });
+    });
+
+});
+
+
+
 
 module.exports = router;
